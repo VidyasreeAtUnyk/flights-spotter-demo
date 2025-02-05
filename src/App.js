@@ -27,7 +27,7 @@ const App = () => {
       destinationEntityId: destination?.entityId,
       date: departureDate?.toLocaleDateString('en-CA'),
       returnDate: returnDate?.toLocaleDateString('en-CA'),
-      cabinClass: 'economy',
+      cabinClass: cabinClass,
       adults: adults?.toString(),
       childrens: childrens?.toString(),
       infants: infants?.toString(),
@@ -39,36 +39,111 @@ const App = () => {
     try {
       const data = await getData(SearchFlightsEndpoint, params);
       setFlights(data?.data);
+      if(data && data.data){
+        sessionStorage.setItem('flights', JSON.stringify(flights));
+      }
     } catch (error) {
       console.error('Failed to fetch flights:', error);
     }
   };
+
+  // Use sessionStorage to persist state after refresh
+  useEffect(() => {
+    const storedOrigin = JSON.parse(sessionStorage.getItem('origin'));
+    if(storedOrigin) {
+      setOrigin(storedOrigin)
+    }
+
+    const storedDestination = JSON.parse(sessionStorage.getItem('destination'));
+    if(storedDestination) {
+      setDestination(storedDestination)
+    }
+
+    const storedDepartureDate = sessionStorage.getItem('departureDate');
+    if(storedDepartureDate) {
+      setDepartureDate(new Date(storedDepartureDate))
+    }
+
+    const storedReturnDate = sessionStorage.getItem('returnDate');
+    if(storedReturnDate) {
+      setReturnDate(new Date(storedReturnDate))
+    }
+
+    const storedCabinClass = sessionStorage.getItem('cabinClass');
+    if(storedCabinClass) {
+      setCabinClass(storedCabinClass)
+    }
+
+    const storedAdults = sessionStorage.getItem('adults');
+    if(storedAdults) {
+      setAdults(storedAdults)
+    }
+
+    const storedInfants = sessionStorage.getItem('infants');
+    if(storedInfants) {
+      setInfants(storedInfants)
+    }
+
+    const storedChildrens = sessionStorage.getItem('childrens');
+    if(storedChildrens) {
+      setChildrens(storedChildrens)
+    }
+
+    const storedFlights = JSON.parse(sessionStorage.getItem('flights'));
+    if(storedFlights) {
+      setFlights(storedFlights)
+    }
+  }, []);
 
 
   return (
     <div>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
       <p>Origin</p>
-      <InputAirport setInputValue={setOrigin} /> 
+      <InputAirport value={origin} setInputValue={(val) => {
+        setOrigin(val);
+        sessionStorage.setItem('origin', JSON.stringify(val));
+      }} /> 
       <p>Destination</p>
-      <InputAirport setInputValue={setDestination} /> 
+      <InputAirport value={destination} setInputValue={(val) => {
+         setDestination(val);
+         sessionStorage.setItem('destination', JSON.stringify(val));
+      }} /> 
       <Box display="flex" gap={2}>
-        <InputDate label='Departure' value={departureDate} setValue={setDepartureDate} disablePast/>
-        <InputDate label='Return (Optional)' value={returnDate} setValue={setReturnDate} minDate={departureDate || new Date()}/>
+        <InputDate label='Departure' value={departureDate} setValue={(val) => {
+           setDepartureDate(val);
+           sessionStorage.setItem('departureDate', val.toISOString());
+        }} disablePast/>
+        <InputDate label='Return (Optional)' value={returnDate} setValue={(val) => {
+           setReturnDate(val);
+           sessionStorage.setItem('returnDate', val.toISOString());
+        }} minDate={departureDate || new Date()}/>
       </Box>
       <Select
         labelId="cabin-class-label"
         id="cabin-class-select"
         value={cabinClass}
         label="Cabin Class"
-        onChange={(event) => setCabinClass(event.target.value)}
+        onChange={(event) => {
+          setCabinClass(event.target.value);
+          sessionStorage.setItem('cabinClass', event.target.value);
+        }}
       >
         <MenuItem value="economy">Economy</MenuItem>
         <MenuItem value="premium_economy">Premium Economy</MenuItem>
         <MenuItem value="business">Business</MenuItem>
         <MenuItem value="first">First Class</MenuItem>
       </Select>
-      <PassengerSelector adults={adults} childrens={childrens} infants={infants} setAdults={setAdults} setChildrens={setChildrens} setInfants={setInfants}/>
+      <PassengerSelector adults={adults} childrens={childrens} infants={infants} setAdults={(val) => {
+        setAdults(val);
+        sessionStorage.setItem('adults', val);
+      }} setChildrens={(val) => {
+        setChildrens(val);
+        sessionStorage.setItem('childrens', val);
+      }} setInfants={(val) => {
+        setInfants(val);
+        sessionStorage.setItem('infants', val);
+      }}/>
       <button disabled={!origin || !destination || !departureDate} onClick={() => getFlights()}>Search</button>
       <h1>Flights</h1>
       {flights?.itineraries?.length ? (

@@ -14,13 +14,13 @@ const PassengerSelector = ({adults, childrens, infants, setAdults, setChildrens,
   const [anchorEl, setAnchorEl] = useState(null);
   const [passengers, setPassengers] = useState({
     adults: adults,
-    children: childrens,
+    childrens: childrens,
     infants: infants,
   });
   const [tempPassengers, setTempPassengers] = useState(passengers);
 
   const totalPassengers =
-    passengers.adults + passengers.children + passengers.infants;
+    passengers.adults + passengers.childrens + passengers.infants;
 
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -109,7 +109,7 @@ const PassengerSelector = ({adults, childrens, infants, setAdults, setChildrens,
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCancel}>
           <Box p={2}>
             {renderCounter('Adults', 'adults', 1)}
-            {renderCounter('Children', 'children')}
+            {renderCounter('Childrens', 'childrens')}
             {renderCounter('Infants', 'infants')}
 
             <Box display="flex" justifyContent="space-between" mt={2}>
