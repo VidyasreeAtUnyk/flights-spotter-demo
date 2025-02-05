@@ -3,13 +3,15 @@ import { getData } from './services/api';
 import { SearchFlightsEndpoint } from './services/endpoints';
 import InputAirport from './components/InputAirport';
 import InputDate from './components/InputDate';
-import { Box, Select, MenuItem } from '@mui/material';
+import { Box, Select, MenuItem, Container } from '@mui/material';
 import {  LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import PassengerSelector from './components/PassengerSelector';
+import DisplayFlights from './components/DisplayFlights';
+
 
 const App = () => {
-  const [flights, setFlights] = useState([]);
+  const [flights, setFlights] = useState(null);
   const [origin, setOrigin] = useState();
   const [destination, setDestination] = useState(null);
   const [departureDate, setDepartureDate] = useState(null);
@@ -18,7 +20,7 @@ const App = () => {
   const [adults, setAdults] = useState(1);
   const [childrens, setChildrens] = useState(0);
   const [infants, setInfants] = useState(0);
-
+ 
   const getFlights = async () => {
     const params = {
       originSkyId: origin?.skyId,
@@ -76,17 +78,17 @@ const App = () => {
 
     const storedAdults = sessionStorage.getItem('adults');
     if(storedAdults) {
-      setAdults(storedAdults)
+      setAdults(parseInt(storedAdults))
     }
 
     const storedInfants = sessionStorage.getItem('infants');
     if(storedInfants) {
-      setInfants(storedInfants)
+      setInfants(parseInt(storedInfants))
     }
 
     const storedChildrens = sessionStorage.getItem('childrens');
     if(storedChildrens) {
-      setChildrens(storedChildrens)
+      setChildrens(parseInt(storedChildrens))
     }
 
     const storedFlights = JSON.parse(sessionStorage.getItem('flights'));
@@ -99,6 +101,10 @@ const App = () => {
   return (
     <div>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Container 
+        maxWidth="lg" 
+        sx={{ bgcolor: '#2a2a2e' }}
+        >
       <p>Origin</p>
       <InputAirport value={origin} setInputValue={(val) => {
         setOrigin(val);
@@ -145,16 +151,8 @@ const App = () => {
         sessionStorage.setItem('infants', val);
       }}/>
       <button disabled={!origin || !destination || !departureDate} onClick={() => getFlights()}>Search</button>
-      <h1>Flights</h1>
-      {flights?.itineraries?.length ? (
-        <ul>
-          {flights.itineraries.map((flight, index) => (
-            <li key={index}>{flight?.price?.formatted}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>Loading...</p>
-      )}
+      </Container>
+      <DisplayFlights flights={flights}/>
       </LocalizationProvider>
     </div>
   );
