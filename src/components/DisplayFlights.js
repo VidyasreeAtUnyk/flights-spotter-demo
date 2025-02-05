@@ -15,7 +15,7 @@ const DisplayFlights = ({flights}) => {
   return (
         <Container 
         maxWidth="lg" 
-        sx={{ bgcolor: '#2a2a2e' }}
+        sx={{ bgcolor: '#2a2a2e', paddingBottom: '20px' }}
         >
             <Box
             sx={{

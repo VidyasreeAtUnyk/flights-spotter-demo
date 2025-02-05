@@ -139,12 +139,6 @@ const AccordionFlight = ({flight}) => {
           onClick={() => setIsExpanded(!isExpanded)}
         >
             <FlightSummary time={formatFlightTime(oneWayDetails.departure, oneWayDetails.arrival)} logo={airlineDetails.logoUrl} day={formatFlightDate(oneWayDetails.departure)} duration={formatDuration(oneWayDetails.durationInMinutes)} stops={oneWayDetails.stopCount} airlines={airlineDetails.name} price={flight.price.formatted} expanded={isExpanded}/>
-            {/* <Box>
-                <Typography component="span">{formatFlightTime(oneWayDetails.departure, oneWayDetails.arrival)}</Typography>
-                <Typography component="span">{airlineDetails?.name}</Typography>
-            </Box>
-          <Typography component="span">{oneWayDetails?.stopCount}</Typography>
-          <Typography component="span">{flight?.price?.formatted}</Typography> */}
         </AccordionSummary>
         <AccordionDetails sx={{pt: 0}}>
           {oneWayDetails.segments.map((segment, index) => (

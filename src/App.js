@@ -103,10 +103,10 @@ const App = () => {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Container 
         maxWidth="lg" 
-        sx={{ bgcolor: '#2a2a2e' }}
         >
+      <Box display='flex' gap={2} flexDirection='column'>
       <p>Origin</p>
-      <InputAirport value={origin} setInputValue={(val) => {
+      <InputAirport value={origin} color='white' setInputValue={(val) => {
         setOrigin(val);
         sessionStorage.setItem('origin', JSON.stringify(val));
       }} /> 
@@ -150,11 +150,12 @@ const App = () => {
         setInfants(val);
         sessionStorage.setItem('infants', val);
       }}/>
-      <button disabled={!origin || !destination || !departureDate} onClick={() => getFlights()}>Search</button>
+      <button disabled={!origin || !destination || !departureDate} onClick={() => getFlights()} style={{width: 'fit-content', padding: '10px 20px'}}>Search</button>
+      </Box>
       </Container>
       <DisplayFlights flights={flights}/>
       </LocalizationProvider>
-    </div>
+      </div>
   );
 };
 

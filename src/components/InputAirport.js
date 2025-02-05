@@ -3,7 +3,7 @@ import { Autocomplete, TextField, CircularProgress } from '@mui/material';
 import { getData } from '../services/api';
 import { SearchAirportsEndpoint } from '../services/endpoints';
 
-const InputAirport = ({setInputValue, value}) => {
+const InputAirport = ({setInputValue, value, ...props}) => {
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -31,6 +31,7 @@ const InputAirport = ({setInputValue, value}) => {
       onChange={(e, val) => setInputValue(val)}
       value={value || null}
       loading={loading}
+      {...props}
       renderInput={(params) => (
         <TextField
           {...params}
